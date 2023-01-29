@@ -1,27 +1,46 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-console.log(galleryItems);
-
+// console.log(galleryItems);
 const galleryPicture = document.querySelector('.gallery');
-let selectPicture = null;
-galleryPicture.addEventListener('click', onGalleryPictureClick );
 
-function onGalleryPictureClick (e){
- if (e.target !== '');
- return;
+const galleryEl = galleryItems
+    .map(({ preview, description, original }) => 
+    `<div class="gallery__item">
+        <a class="gallery__link" href="${original}">
+            <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+            />
+        </a>
+    </div>`)
+    .join('');
 
-const activePicture = document.querySelector('.gallery__image ');
+galleryPicture.insertAdjacentHTML('beforeend', galleryEl)
 
-console.log (activePicture);
+galleryPicture.addEventListener('click', onImgClick)
 
-if(activePicture){
-    activePicture.classList.remove('.gallery__image ');
+function onImgClick(e) {
+    evt.preventDefault();
+    if (e.target.nodeName !== 'IMG') {
+        return;
+    }
+
+    const modal = basicLightbox.create(
+        `<img src="${e.target.dataset.source}" width="800" height="600">`,
+
+        {   onShow: () => window.addEventListener('keydown', onEscKeyPress),
+            onClose: () => window.removeEventListener('keydown', onEscKeyPress),
+        }
+    );
+    
+    modal.show();
+
+    function onEscKeyPress(e) {   
+        if (e.code === "Escape") {
+            modal.close();
+        }
+    }
 }
-const nextActivePicture = e.target
-nextActivePicture.classList.add('.gallery__image ');
-selectPicture = nextActivePicture.dataset.value;
-console.log(selectPicture)
-};
-
-
